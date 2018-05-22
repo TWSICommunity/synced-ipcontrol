@@ -8,6 +8,7 @@ $credentials = "user=USER_HERE password=PASSWORD_HERE";
 //POST Variables
 $password = "CREATE_PASSWORD_HERE";
 $guessedPassword = $_POST["guessedPassword"];
+$log = "/path/to/file"; // example "/var/log/ipban";
 ?>
 
 <html>
@@ -19,6 +20,12 @@ $guessedPassword = $_POST["guessedPassword"];
 <?php
 //Check if the guessed password is correct
 if($guessedPassword == $password) {
+	$ip = $_SERVER['REMOTE_ADDR'];
+	
+	$f = fopen($log, "a");
+	fwrite($f, "IP ".$ip." has logged in! If this was not your staff, then this is probably an alert.
+");
+	fclose($f);
 	//connect to the database
 	$dbConnection = pg_connect("$host $port $dbname $credentials");
 	echo '
@@ -138,6 +145,12 @@ EOF;
 		}
 	}
 } else if(isset($guessedPassword)) {
+	$ip = $_SERVER['REMOTE_ADDR'];
+	
+	$f = fopen($log, "a");
+	fwrite($f, "IP ".$ip." has logged in! If this was not your staff, then this is probably an alert.
+");
+	fclose($f);
 	//show the input password form, with an incorrect password text
 	echo '
 		<form method="POST" action="ipcontrol.php">
